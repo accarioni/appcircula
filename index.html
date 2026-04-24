@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIRCULA · App Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0F1A14;
+  --paper:#F5F1E8;
+  --paper-2:#EDE6D3;
+  --moss:#2E4F3E;
+  --moss-deep:#1A3A2E;
+  --clay:#C65D3C;
+  --lime:#B8D174;
+  --gold:#D4A84B;
+  --grid:rgba(15,26,20,.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing: antialiased; }
+html,body {
+  font-family: 'Fraunces', Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+  opacity:.25; mix-blend-mode:multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============ PAGE ============ */
+.page {
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 2;
+}
+.page-header {
+  max-width: 1400px;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+.page-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.25em;
+  color: var(--clay);
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.page-tag::before, .page-tag::after { content:''; width:32px; height:1px; background: var(--clay); }
+.page-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "wght" 300;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+.page-title em { font-style: italic; color: var(--moss); }
+.page-sub {
+  font-size: 1.1rem;
+  color: rgba(15,26,20,0.65);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ============ PHONE STAGE ============ */
+.phones-stage {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  align-items: start;
+  position: relative;
+}
+
+.phone-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.phone-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 0.6rem;
+  text-align: center;
+}
+.phone-label .num {
+  background: var(--clay);
+  color: var(--paper);
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+}
+.phone-caption {
+  font-size: 0.92rem;
+  font-style: italic;
+  color: rgba(15,26,20,0.7);
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ============ PHONE FRAME ============ */
+.phone {
+  width: 340px;
+  height: 700px;
+  background: var(--ink);
+  border-radius: 48px;
+  padding: 12px;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.18),
+    0 10px 30px rgba(0,0,0,0.12),
+    inset 0 0 0 2px rgba(245,241,232,0.06);
+  position: relative;
+}
+.phone::before {
+  content: '';
+  position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 28px;
+  background: var(--ink);
+  border-radius: 16px;
+  z-index: 10;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  border-radius: 36px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* status bar */
+.status-bar {
+  padding: 14px 24px 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding-top: 20px;
+}
+.status-icons { display: flex; gap: 4px; align-items: center; }
+.status-icons svg { width: 14px; height: 10px; }
+
+/* app header */
+.app-header {
+  padding: 0.5rem 1.5rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.app-greet { font-size: 0.75rem; color: rgba(15,26,20,0.55); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
+.app-user { font-size: 1.15rem; font-weight: 500; font-style: italic; }
+.avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--moss);
+  color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.avatar::after {
+  content:'';
+  position: absolute;
+  width: 12px; height: 12px;
+  background: var(--lime);
+  border-radius: 50%;
+  border: 2px solid var(--paper);
+  margin-top: 30px;
+  margin-left: -12px;
+}
+
+/* ============ SCREEN 1: HOME ============ */
+.screen {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem 1rem;
+}
+.screen::-webkit-scrollbar { width: 0; }
+
+.impact-card {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 20px;
+  padding: 1.4rem 1.4rem 1.2rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+.impact-card::before {
+  content:'';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, var(--moss) 0%, transparent 70%);
+  opacity: 0.5;
+}
+.impact-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--lime);
+  margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.impact-label::before { content:'◆'; font-size: 0.6rem; }
+.impact-value {
+  font-size: 2.5rem;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "wght" 300;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.impact-value em { font-style: italic; color: var(--gold); }
+.impact-unit { font-size: 1rem; color: rgba(245,241,232,0.6); font-family: 'JetBrains Mono', monospace; }
+.impact-equivalent {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(245,241,232,0.15);
+  font-size: 0.72rem;
+  color: rgba(245,241,232,0.7);
+}
+.eq-item { flex: 1; }
+.eq-value {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--lime);
+  margin-bottom: 2px;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(15,26,20,0.55);
+  margin: 1rem 0 0.8rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.section-title span.link { color: var(--clay); font-weight: 500; cursor: pointer; }
+
+.next-collect {
+  background: var(--paper-2);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid var(--grid);
+  transition: all .3s;
+  cursor: pointer;
+}
+.next-collect:hover { transform: translateY(-2px); border-color: var(--clay); }
+.collect-date {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  text-align: center;
+  min-width: 58px;
+}
+.collect-date .day { font-size: 1.2rem; font-weight: 500; line-height: 1; }
+.collect-date .month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lime);
+  margin-top: 2px;
+}
+.collect-info { flex: 1; }
+.collect-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 2px; }
+.collect-meta {
+  font-size: 0.75rem;
+  color: rgba(15,26,20,0.55);
+  display: flex; gap: 0.6rem; align-items: center;
+}
+.collect-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.status-confirmed { background: #e8f0dd; color: var(--moss); }
+.status-pending { background: #f5e4d8; color: var(--clay); }
+
+.cta-block {
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 18px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0 0.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  transition: all .3s;
+}
+.cta-block:hover { transform: translateY(-2px); background: var(--moss); }
+.cta-block-text {
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.cta-block-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.75;
+  margin-top: 3px;
+}
+.cta-arrow {
+  width: 40px; height: 40px;
+  background: rgba(245,241,232,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: Fraunces; font-size: 1.3rem;
+}
+
+.tab-bar {
+  border-top: 1px solid var(--grid);
+  padding: 0.8rem 1.5rem 1.3rem;
+  display: flex;
+  justify-content: space-around;
+  background: var(--paper);
+}
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(15,26,20,0.4);
+  cursor: pointer;
+}
+.tab.active { color: var(--ink); }
+.tab.active svg { stroke: var(--clay); }
+.tab svg { width: 22px; height: 22px; stroke-width: 1.5; }
+
+/* ============ SCREEN 2: BOOKING ============ */
+.booking-header {
+  padding: 0.5rem 1.5rem 0.8rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.back-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--paper-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: 1px solid var(--grid);
+}
+.booking-title-sm { font-size: 1rem; font-weight: 500; font-style: italic; }
+
+.booking-steps {
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+.step-bar {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: var(--paper-2);
+}
+.step-bar.done { background: var(--moss); }
+.step-bar.active { background: var(--clay); }
+
+.booking-h {
+  font-size: 1.7rem;
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+  padding: 0 0;
+}
+.booking-h em { font-style: italic; color: var(--moss); }
+.booking-sub-small {
+  font-size: 0.85rem;
+  color: rgba(15,26,20,0.55);
+  margin-bottom: 1.3rem;
+}
+
+.material-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+}
+.mat-card {
+  background: var(--paper-2);
+  border: 1.5px solid var(--grid);
+  border-radius: 14px;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: all .25s;
+  position: relative;
+}
+.mat-card.selected {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--clay);
+}
+.mat-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 10px;
+  width: 18px; height: 18px;
+  background: var(--lime);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mat-icon { font-size: 1.4rem; margin-bottom: 0.2rem; }
+.mat-name { font-size: 0.88rem; font-weight: 500; }
+.mat-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: rgba(15,26,20,0.5);
+}
+.mat-card.selected .mat-price { color: rgba(245,241,232,0.6); }
+
+.slot-label {
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(15,26,20,0.55);
+  margin: 1rem 0 0.6rem;
+}
+.slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+.slot {
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: var(--paper-2);
+  border: 1.5px solid var(--grid);
+  text-align: center;
+  cursor: pointer;
+  transition: all .25s;
+}
+.slot-time { font-size: 0.95rem; font-weight: 500; }
+.slot-coop {
+  font-size: 0.65rem;
+  color: rgba(15,26,20,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+.slot.selected {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--clay);
+}
+.slot.selected .slot-coop { color: var(--lime); }
+
+.summary-card {
+  background: var(--lime);
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+.summary-line {
+  display: flex; justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+.summary-line.total {
+  font-size: 1rem;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(15,26,20,0.2);
+  font-style: italic;
+}
+
+.confirm-btn {
+  width: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1rem;
+  border-radius: 14px;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+}
+.confirm-btn::after { content: '→'; font-family: Fraunces; font-size: 1.3rem; }
+
+/* ============ SCREEN 3: RECEIPT ============ */
+.receipt-top {
+  background: var(--moss);
+  color: var(--paper);
+  padding: 2rem 1.5rem 1.5rem;
+  position: relative;
+  text-align: center;
+}
+.receipt-check {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0 auto 1rem;
+  box-shadow: 0 8px 20px rgba(184,209,116,0.4);
+}
+.receipt-title {
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+.receipt-sub {
+  font-size: 0.8rem;
+  color: rgba(245,241,232,0.7);
+  font-family: 'JetBrains Mono', monospace;
+}
+.receipt-perforation {
+  height: 20px;
+  background: var(--moss);
+  position: relative;
+}
+.receipt-perforation::before, .receipt-perforation::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  background: var(--paper);
+  border-radius: 50%;
+  top: 0;
+}
+.receipt-perforation::before { left: -10px; }
+.receipt-perforation::after { right: -10px; }
+
+.receipt-body {
+  padding: 1.5rem;
+  background: var(--paper);
+}
+.receipt-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(15,26,20,0.5);
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--grid);
+  margin-bottom: 1rem;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--grid);
+}
+.receipt-row:last-of-type { border-bottom: none; }
+.receipt-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(15,26,20,0.55);
+}
+.receipt-val { font-size: 0.92rem; font-weight: 500; }
+
+.quality-badge {
+  background: var(--paper-2);
+  border-radius: 14px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--grid);
+}
+.quality-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.8rem;
+}
+.quality-title {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(15,26,20,0.55);
+}
+.quality-score {
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+}
+.quality-score em { font-style: italic; color: var(--moss); }
+.quality-bar {
+  height: 6px;
+  background: var(--paper);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+.quality-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--lime) 0%, var(--moss) 100%);
+  width: 92%;
+  border-radius: 3px;
+}
+.quality-note {
+  font-size: 0.75rem;
+  color: rgba(15,26,20,0.65);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.impact-inline {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  text-align: center;
+}
+.imp-item { }
+.imp-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--lime);
+  font-variation-settings: "opsz" 144;
+  line-height: 1;
+}
+.imp-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(245,241,232,0.6);
+  margin-top: 4px;
+}
+
+.share-btn {
+  width: 100%;
+  background: var(--paper-2);
+  border: 1px solid var(--grid);
+  padding: 0.9rem;
+  border-radius: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  margin-top: 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+
+/* ============ FLOW DIAGRAM ============ */
+.flow-block {
+  max-width: 1200px;
+  margin: 5rem auto 0;
+  padding: 2.5rem;
+  background: var(--paper-2);
+  border-radius: 24px;
+  border: 1px solid var(--grid);
+  position: relative;
+  z-index: 2;
+}
+.flow-title {
+  font-size: 1.6rem;
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+}
+.flow-desc {
+  font-size: 0.95rem;
+  color: rgba(15,26,20,0.65);
+  margin-bottom: 2rem;
+}
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.flow-step {
+  padding: 1.2rem;
+  background: var(--paper);
+  border-radius: 14px;
+  border: 1px solid var(--grid);
+  position: relative;
+}
+.flow-step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--clay);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.6rem;
+}
+.flow-step-title {
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+.flow-step-text {
+  font-size: 0.82rem;
+  color: rgba(15,26,20,0.6);
+  line-height: 1.5;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  .phones-stage { grid-template-columns: 1fr; gap: 4rem; }
+  .phone { transform: scale(0.95); }
+  .flow-steps { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .page { padding: 3rem 1rem; }
+  .phone { width: 320px; height: 660px; transform: none; }
+  .flow-block { padding: 1.5rem; }
+  .flow-steps { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="page-header">
+    <div class="page-tag">APP MOBILE · PROTÓTIPO</div>
+    <h1 class="page-title">Três telas.<br><em>Todo o fluxo.</em></h1>
+    <p class="page-sub">A Circula no bolso do síndico: ver o que vem por aí, pedir uma coleta em três toques e provar que o material foi destinado direito.</p>
+  </div>
+
+  <!-- PHONE STAGE -->
+  <div class="phones-stage">
+
+    <!-- PHONE 1: HOME -->
+    <div class="phone-wrap">
+      <div class="phone-label"><span class="num">1</span> HOME</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 18 10" fill="currentColor"><rect x="0" y="6" width="3" height="4" rx="0.5"/><rect x="5" y="4" width="3" height="6" rx="0.5"/><rect x="10" y="2" width="3" height="8" rx="0.5"/><rect x="15" y="0" width="3" height="10" rx="0.5"/></svg>
+              <svg viewBox="0 0 16 10" fill="currentColor"><path d="M0 5 L8 0 L16 5 M2 6 L8 2 L14 6 M4 7 L8 4 L12 7"/></svg>
+              <svg viewBox="0 0 24 10" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="20" height="9" rx="2"/><rect x="2" y="2" width="14" height="6" rx="1" fill="currentColor"/><rect x="21" y="3" width="2" height="4" fill="currentColor" rx="1"/></svg>
+            </div>
+          </div>
+
+          <div class="app-header">
+            <div>
+              <div class="app-greet">SEXTA · 24 ABR</div>
+              <div class="app-user">Oi, Cláudia</div>
+            </div>
+            <div class="avatar">CS</div>
+          </div>
+
+          <div class="screen">
+            <div class="impact-card">
+              <div class="impact-label">Seu impacto · Abril</div>
+              <div class="impact-value">128<span class="impact-unit"> kg</span></div>
+              <div style="font-size:0.75rem; color:rgba(245,241,232,0.6); margin-top:-4px;">reciclado · <em style="color:var(--gold);font-style:italic;">+18%</em> vs março</div>
+              <div class="impact-equivalent">
+                <div class="eq-item">
+                  <div class="eq-value">3,2</div>
+                  <div>árvores</div>
+                </div>
+                <div class="eq-item">
+                  <div class="eq-value">410L</div>
+                  <div>água poupada</div>
+                </div>
+                <div class="eq-item">
+                  <div class="eq-value">84kg</div>
+                  <div>CO₂ evitado</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-title">
+              Próximas coletas
+              <span class="link">Ver todas</span>
+            </div>
+
+            <div class="next-collect">
+              <div class="collect-date">
+                <div class="day">27</div>
+                <div class="month">ABR</div>
+              </div>
+              <div class="collect-info">
+                <div class="collect-title">Papelão + vidro</div>
+                <div class="collect-meta">
+                  <span>13:00–15:00</span>
+                  <span class="collect-status status-confirmed">Confirmada</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="next-collect">
+              <div class="collect-date" style="background:var(--clay);">
+                <div class="day">03</div>
+                <div class="month" style="color:var(--paper);">MAI</div>
+              </div>
+              <div class="collect-info">
+                <div class="collect-title">Mix reciclável</div>
+                <div class="collect-meta">
+                  <span>09:00–11:00</span>
+                  <span class="collect-status status-pending">Aguardando coop</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cta-block">
+              <div>
+                <div class="cta-block-text">Pedir<br>coleta extra</div>
+                <div class="cta-block-sub">Três toques · 2h SLA</div>
+              </div>
+              <div class="cta-arrow">→</div>
+            </div>
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12L12 4l9 8v9a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2v-9z"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
+              <span>Agenda</span>
+            </div>
+            <div class="tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19h4l10-10a2.8 2.8 0 00-4-4L4 15v4z"/></svg>
+              <span>Relatórios</span>
+            </div>
+            <div class="tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+              <span>Perfil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="phone-caption">Agenda da semana, impacto do mês e um caminho de três toques para pedir coleta extra.</p>
+    </div>
+
+    <!-- PHONE 2: BOOKING -->
+    <div class="phone-wrap">
+      <div class="phone-label"><span class="num">2</span> AGENDAR COLETA</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:43</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 18 10" fill="currentColor"><rect x="0" y="6" width="3" height="4" rx="0.5"/><rect x="5" y="4" width="3" height="6" rx="0.5"/><rect x="10" y="2" width="3" height="8" rx="0.5"/><rect x="15" y="0" width="3" height="10" rx="0.5"/></svg>
+              <svg viewBox="0 0 24 10" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="20" height="9" rx="2"/><rect x="2" y="2" width="14" height="6" rx="1" fill="currentColor"/><rect x="21" y="3" width="2" height="4" fill="currentColor" rx="1"/></svg>
+            </div>
+          </div>
+
+          <div class="booking-header">
+            <div class="back-btn">←</div>
+            <div class="booking-title-sm">Nova coleta</div>
+          </div>
+
+          <div class="booking-steps">
+            <div class="step-bar done"></div>
+            <div class="step-bar active"></div>
+            <div class="step-bar"></div>
+          </div>
+
+          <div class="screen" style="padding-top:0;">
+            <h2 class="booking-h">Quanto vai<br><em>despachar?</em></h2>
+            <p class="booking-sub-small">Materiais + janela de horário. Nada mais.</p>
+
+            <div class="material-grid">
+              <div class="mat-card selected">
+                <div class="mat-icon">📦</div>
+                <div class="mat-name">Papelão</div>
+                <div class="mat-price">R$ 0,48/kg hoje</div>
+              </div>
+              <div class="mat-card selected">
+                <div class="mat-icon">🍾</div>
+                <div class="mat-name">Vidro</div>
+                <div class="mat-price">R$ 0,12/kg hoje</div>
+              </div>
+              <div class="mat-card">
+                <div class="mat-icon">🥫</div>
+                <div class="mat-name">Alumínio</div>
+                <div class="mat-price">R$ 5,80/kg hoje</div>
+              </div>
+              <div class="mat-card">
+                <div class="mat-icon">🧴</div>
+                <div class="mat-name">Plástico</div>
+                <div class="mat-price">R$ 1,20/kg hoje</div>
+              </div>
+            </div>
+
+            <div class="slot-label">Janela — sáb, 27 abr</div>
+            <div class="slots">
+              <div class="slot">
+                <div class="slot-time">09–11h</div>
+                <div class="slot-coop">EcoVida</div>
+              </div>
+              <div class="slot selected">
+                <div class="slot-time">13–15h</div>
+                <div class="slot-coop">EcoVida · ★ 4.9</div>
+              </div>
+              <div class="slot">
+                <div class="slot-time">15–17h</div>
+                <div class="slot-coop">Recicla+</div>
+              </div>
+              <div class="slot">
+                <div class="slot-time">17–19h</div>
+                <div class="slot-coop">sem capacidade</div>
+              </div>
+            </div>
+
+            <div class="summary-card">
+              <div class="summary-line">
+                <span>2 materiais</span>
+                <span>~35 kg estimado</span>
+              </div>
+              <div class="summary-line">
+                <span>Cooperativa</span>
+                <span>Coop. EcoVida</span>
+              </div>
+              <div class="summary-line total">
+                <span>Valor estimado</span>
+                <span>R$ 21,00</span>
+              </div>
+            </div>
+
+            <button class="confirm-btn">Confirmar coleta</button>
+          </div>
+        </div>
+      </div>
+      <p class="phone-caption">Material, janela e cooperativa em uma tela. Preço do dia transparente, antes da confirmação.</p>
+    </div>
+
+    <!-- PHONE 3: RECEIPT -->
+    <div class="phone-wrap">
+      <div class="phone-label"><span class="num">3</span> COMPROVANTE</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar" style="background:var(--moss); color:var(--paper);">
+            <span>14:22</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 18 10" fill="currentColor"><rect x="0" y="6" width="3" height="4" rx="0.5"/><rect x="5" y="4" width="3" height="6" rx="0.5"/><rect x="10" y="2" width="3" height="8" rx="0.5"/><rect x="15" y="0" width="3" height="10" rx="0.5"/></svg>
+              <svg viewBox="0 0 24 10" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="20" height="9" rx="2"/><rect x="2" y="2" width="14" height="6" rx="1" fill="currentColor"/><rect x="21" y="3" width="2" height="4" fill="currentColor" rx="1"/></svg>
+            </div>
+          </div>
+
+          <div class="receipt-top">
+            <div class="receipt-check">✓</div>
+            <div class="receipt-title">Coleta realizada</div>
+            <div class="receipt-sub">27 ABR · 13:42 · COOP. ECOVIDA</div>
+          </div>
+
+          <div class="receipt-perforation"></div>
+
+          <div class="receipt-body" style="overflow-y:auto; max-height:calc(100% - 200px);">
+            <div class="receipt-id">#CIR-2026-04-2714A · assinado digitalmente</div>
+
+            <div class="receipt-row">
+              <div class="receipt-label">Papelão</div>
+              <div class="receipt-val">24,3 kg</div>
+            </div>
+            <div class="receipt-row">
+              <div class="receipt-label">Vidro</div>
+              <div class="receipt-val">11,8 kg</div>
+            </div>
+            <div class="receipt-row">
+              <div class="receipt-label">Total</div>
+              <div class="receipt-val">36,1 kg</div>
+            </div>
+            <div class="receipt-row">
+              <div class="receipt-label">Destinação</div>
+              <div class="receipt-val" style="font-size:0.82rem;">Indústria SC-Papel · MTR #3301</div>
+            </div>
+            <div class="receipt-row">
+              <div class="receipt-label">Valor pago</div>
+              <div class="receipt-val">R$ 23,08</div>
+            </div>
+
+            <div class="quality-badge">
+              <div class="quality-header">
+                <div class="quality-title">Qualidade do material</div>
+                <div class="quality-score"><em>4,6</em>/5</div>
+              </div>
+              <div class="quality-bar"><div class="quality-fill"></div></div>
+              <div class="quality-note">Apenas 4% de contaminação no vidro — parabéns pelo cuidado. Papelão veio perfeito.</div>
+            </div>
+
+            <div class="impact-inline">
+              <div class="imp-item">
+                <div class="imp-value">0,9</div>
+                <div class="imp-unit">árvores</div>
+              </div>
+              <div class="imp-item">
+                <div class="imp-value">115L</div>
+                <div class="imp-unit">água</div>
+              </div>
+              <div class="imp-item">
+                <div class="imp-value">24kg</div>
+                <div class="imp-unit">CO₂ evit.</div>
+              </div>
+            </div>
+
+            <button class="share-btn">Compartilhar em assembleia ↗</button>
+          </div>
+        </div>
+      </div>
+      <p class="phone-caption">Comprovante assinado, qualidade classificada com feedback específico e impacto convertido em linguagem humana.</p>
+    </div>
+
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow-block">
+    <div class="flow-title">O que acontece <em>nos bastidores</em>.</div>
+    <div class="flow-desc">Cada toque do síndico dispara um fluxo coordenado entre a plataforma, a cooperativa parceira e a indústria compradora. Nenhum áudio de WhatsApp foi prejudicado na produção deste sistema.</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">→ 01 GERADOR</div>
+        <div class="flow-step-title">Solicita</div>
+        <div class="flow-step-text">Três toques: material, janela, confirmar. A plataforma geolocaliza e já sugere a cooperativa mais próxima com capacidade.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">→ 02 CIRCULA</div>
+        <div class="flow-step-title">Roteiriza</div>
+        <div class="flow-step-text">Algoritmo agrupa coletas próximas, propõe rota ao motorista e dispara notificação à cooperativa, com SLA de 2h para confirmação.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">→ 03 COOPERATIVA</div>
+        <div class="flow-step-title">Coleta + Classifica</div>
+        <div class="flow-step-text">Motorista registra foto, peso e nota de qualidade. Sistema gera recibo digital assinado e empurra para o bolso do gerador.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">→ 04 INDÚSTRIA</div>
+        <div class="flow-step-title">Compra + Prova</div>
+        <div class="flow-step-text">Material prensado é comercializado com MTR digital. Pagamento liquidado automaticamente. Destinação fica auditável para o gerador.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Make material cards and slots interactive
+document.querySelectorAll('.mat-card').forEach(card => {
+  card.addEventListener('click', () => card.classList.toggle('selected'));
+});
+document.querySelectorAll('.slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+    slot.classList.add('selected');
+  });
+});
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
